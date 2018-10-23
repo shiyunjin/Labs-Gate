@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
-	"github.com/shiyunjin/SchoolNetwork/system/action"
+	"github.com/shiyunjin/SchoolNetwork/system/action/user"
 )
 
 func Router() *gin.Engine {
@@ -17,7 +17,7 @@ func Router() *gin.Engine {
 	//API Serve
 	api := r.Group("/api")
 	{
-		api.GET("/profile", action.Exp)
+		api.POST("/login", user.Login)
 	}
 
 	return r
