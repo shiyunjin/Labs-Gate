@@ -12,7 +12,7 @@ func Router() *gin.Engine {
 	r := gin.Default()
 
 	// Serve the frontend
-	r.Use(static.Serve("/", static.LocalFile("system/view/SchoolNetworkUI/build", true)))
+	r.Use(static.Serve("/", static.LocalFile("system/view/build", true)))
 
 	//API Serve
 	api := r.Group("/api")
