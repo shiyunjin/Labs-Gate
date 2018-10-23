@@ -2,10 +2,16 @@ package main
 
 import (
 	"github.com/shiyunjin/SchoolNetwork/system"
+	"github.com/shiyunjin/SchoolNetwork/system/config"
+	"github.com/shiyunjin/SchoolNetwork/system/db"
 )
 
 func main() {
 	r := router.Router()
-	// Listen and Server in 0.0.0.0:8080
-	r.Run(":8080")
+
+	// Init connect to mongodb
+	db.Connect();
+
+	// Listen and Server on Port
+	r.Run(":" + config.Get("port").(string))
 }
