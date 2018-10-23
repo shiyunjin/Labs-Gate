@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gitee.com/shiyunjin/SchoolNetwork/system"
+	"github.com/shiyunjin/SchoolNetwork/system"
 )
 
 func main() {

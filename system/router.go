@@ -1,9 +1,9 @@
 package router
 
 import (
-	"gitee.com/shiyunjin/SchoolNetwork/system/action"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/shiyunjin/SchoolNetwork/system/action"
 )
 
 func Router() *gin.Engine {
