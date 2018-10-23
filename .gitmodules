@@ -1,0 +1,3 @@
+[submodule "system/view"]
+	path = system/view
+	url = git@gitee.com:shiyunjin/SchoolNetworkUI.git
