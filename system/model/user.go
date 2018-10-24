@@ -4,6 +4,10 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+const (
+	CollectionUser = "user"
+)
+
 type User struct {
 	Id         bson.ObjectId
 	Name       string
@@ -12,7 +16,7 @@ type User struct {
 	Salt       string
 	Admin      bool
 	Superadmin bool
-	Permission []string
+	Permission string
 	Rom        []string
 	Createtime string
 	Updatetime string
