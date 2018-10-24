@@ -27,12 +27,9 @@ func Connect() {
 		fmt.Printf("Can't connect to mongo, go error %v\n", err)
 		panic(err.Error())
 	}
+
 	s.SetSafe(&mgo.Safe{})
 	fmt.Println("Connected to", uri)
 	Session = s
 	Mongo = mongo
-}
-
-func DB() *mgo.Database {
-	return Session.DB(config.Get("mongodb.name").(string))
 }

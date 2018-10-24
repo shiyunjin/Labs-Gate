@@ -7,10 +7,10 @@ import (
 )
 
 func main() {
-	r := router.Router()
-
 	// Init connect to mongodb
 	db.Connect();
+
+	r := router.Router()
 
 	// Listen and Server on Port
 	r.Run(":" + config.Get("port").(string))
