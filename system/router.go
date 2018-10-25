@@ -6,8 +6,10 @@ import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/shiyunjin/SchoolNetwork/system/action/user"
+	AdminUser "github.com/shiyunjin/SchoolNetwork/system/action/admin/user"
 	"github.com/shiyunjin/SchoolNetwork/system/config"
 	"github.com/shiyunjin/SchoolNetwork/system/middlewares"
+	"github.com/shiyunjin/SchoolNetwork/system/middlewares/admin"
 	"github.com/shiyunjin/SchoolNetwork/system/middlewares/jwt"
 )
 
@@ -34,6 +36,14 @@ func Router() *gin.Engine {
 		{
 			api.GET("/profile", user.Profile)
 			api.GET("/authority", user.Authority)
+
+			api.Use(admin.Need())
+			{
+				userGroup := api.Group("/user")
+				{
+					userGroup.GET("/list", AdminUser.List)
+				}
+			}
 		}
 	}
 
