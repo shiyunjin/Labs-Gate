@@ -2,6 +2,7 @@ package model
 
 import (
 	"gopkg.in/mgo.v2/bson"
+	"time"
 )
 
 const (
@@ -9,7 +10,7 @@ const (
 )
 
 type User struct {
-	Id         bson.ObjectId
+	Id         bson.ObjectId	`bson:"_id,omitempty"`
 	Name       string
 	Username   string
 	Hash       string
@@ -18,6 +19,6 @@ type User struct {
 	Superadmin bool
 	Permission string
 	Rom        []string
-	Createtime string
-	Updatetime string
+	Createtime time.Time
+	Updatetime time.Time
 }
