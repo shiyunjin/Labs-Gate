@@ -13,18 +13,20 @@ var jwtSecret = []byte(config.Get("jwt.secret").(string))
 
 type Claims struct {
 	Id 			bson.ObjectId
+	Name		string
 	Username 	string
 	Hash 		string
 	Auth 		string
 	jwt.StandardClaims
 }
 
-func GenerateToken(id bson.ObjectId, username, hash, auth string, exp int) (string, error) {
+func GenerateToken(id bson.ObjectId, name, username, hash, auth string, exp int) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(time.Duration(exp) * time.Hour)
 
 	claims := Claims{
 		id,
+		name,
 		username,
 		hash,
 		auth,

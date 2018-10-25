@@ -8,11 +8,25 @@ import (
 )
 
 func Profile(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"name": "淘小宝",
-		"department": "技术部",
+	session := sessions.Default(c)
+	v := session.Get("NowUser")
+	var user *util.Claims
+
+	if v == nil {
+		c.JSON(e.SUCCESS, gin.H{
+			"name": "???",
+			"department": "guest",
+			"avatar": "https://img.alicdn.com/tfs/TB1L6tBXQyWBuNjy0FpXXassXXa-80-80.png",
+		})
+		return
+	} else {
+		user = v.(*util.Claims)
+	}
+
+	c.JSON(e.SUCCESS, gin.H{
+		"name": user.Name,
+		"department": user.Auth,
 		"avatar": "https://img.alicdn.com/tfs/TB1L6tBXQyWBuNjy0FpXXassXXa-80-80.png",
-		"userid": 10001,
 	})
 }
 

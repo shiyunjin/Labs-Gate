@@ -68,7 +68,11 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := util.GenerateToken(user.Id, user.Username, user.Hash, user.Permission, util.If(LoginData.Checkbox, 168, 3).(int))
+	token, err := util.GenerateToken(user.Id, user.Name, user.Username, user.Hash, user.Permission, util.If(LoginData.Checkbox, 168, 3).(int))
+
+	if err != nil {
+		c.Error(err)
+	}
 
 	c.SetCookie("token", token, 360000, "/", "", false, false)
 
