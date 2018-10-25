@@ -16,9 +16,6 @@ type LoginRequest struct {
 }
 
 func Login(c *gin.Context) {
-
-
-
 	var LoginData LoginRequest
 	err := c.BindJSON(&LoginData)
 	if err != nil {
