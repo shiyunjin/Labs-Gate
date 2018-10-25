@@ -12,7 +12,6 @@ import (
 func JWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var code int
-		var data interface{}
 		var claims *util.Claims
 
 		code = e.UNAUTHORRIZED
@@ -40,9 +39,8 @@ func JWT() gin.HandlerFunc {
 
 		if code != e.SUCCESS {
 			c.JSON(http.StatusUnauthorized, gin.H{
-				"code" : code,
-				"msg" : e.GetMsg(code),
-				"data" : data,
+				"status" : code,
+				"statusText" : e.GetMsg(code),
 			})
 
 			c.Abort()
