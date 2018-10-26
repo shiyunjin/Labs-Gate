@@ -45,6 +45,7 @@ func Router() *gin.Engine {
 					userGroup.POST("/edit", AdminUser.Edit)
 					userGroup.POST("/reset", AdminUser.Reset)
 					userGroup.POST("/del", AdminUser.Del)
+					userGroup.POST("/add", AdminUser.Add)
 				}
 			}
 		}
