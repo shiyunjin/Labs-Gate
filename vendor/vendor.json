@@ -171,6 +171,12 @@
 			"revisionTime": "2018-09-30T20:58:32Z"
 		},
 		{
+			"checksumSHA1": "IwsY/9z4qCjn5Bl/WS/QKAuQtTU=",
+			"path": "github.com/sethvargo/go-password/password",
+			"revision": "68ac5879751a7105834296859f8c1bf70b064675",
+			"revisionTime": "2018-10-09T02:10:09Z"
+		},
+		{
 			"checksumSHA1": "TdLLY9BtZGuxXO51ICZwIQpHE84=",
 			"path": "github.com/shiyunjin/go-telnet-cisco",
 			"revision": "078e52f594693773e2791d28046e002df4c7ca20",
