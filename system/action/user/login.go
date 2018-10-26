@@ -33,7 +33,9 @@ func Login(c *gin.Context) {
 	user := model.User{}
 
 	db := c.MustGet("db").(*mgo.Database)
-	err = db.C(model.CollectionUser).Find(bson.M{"username":LoginData.Username}).One(&user)
+	err = db.C(model.CollectionUser).Find(bson.M{
+		"username": LoginData.Username,
+	}).One(&user)
 
 	if err != nil {
 		c.Error(err)
