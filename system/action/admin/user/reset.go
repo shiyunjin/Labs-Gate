@@ -57,6 +57,7 @@ func Reset(c *gin.Context) {
 		"$set": bson.M{
 			"hash": hash,
 			"salt": salt,
+			"updatetime": bson.Now(),
 		},
 	})
 

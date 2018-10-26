@@ -33,6 +33,7 @@ func Edit(c *gin.Context) {
 		"$set": bson.M{
 			"name": EditData.Name,
 			"permission": EditData.Auth,
+			"updatetime": bson.Now(),
 		},
 	})
 
