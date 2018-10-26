@@ -4,8 +4,10 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/shiyunjin/SchoolNetwork/system/e"
+	"github.com/shiyunjin/SchoolNetwork/system/model"
 	"github.com/shiyunjin/SchoolNetwork/system/util"
-	"net/http"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"time"
 )
 
@@ -17,9 +19,10 @@ func JWT() gin.HandlerFunc {
 		code = e.UNAUTHORRIZED
 		token, err := c.Request.Cookie("token")
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{
+			c.JSON(e.SUCCESS, gin.H{
 				"status" : code,
 				"statusText" : e.GetMsg(code),
+				"currentAuthority": "guest",
 			})
 
 			c.Abort()
@@ -38,9 +41,28 @@ func JWT() gin.HandlerFunc {
 		}
 
 		if code != e.SUCCESS {
-			c.JSON(http.StatusUnauthorized, gin.H{
+			c.JSON(e.SUCCESS, gin.H{
 				"status" : code,
 				"statusText" : e.GetMsg(code),
+				"currentAuthority": "guest",
+			})
+
+			c.Abort()
+			return
+		}
+
+		db := c.MustGet("db").(*mgo.Database)
+		user := model.User{}
+
+		err = db.C(model.CollectionUser).Find(bson.M{
+			"_id": claims.Id,
+		}).One(&user)
+
+		if user.Hash != claims.Hash {
+			c.JSON(e.SUCCESS, gin.H{
+				"status" : e.ERROR_AUTH_CHECK_TOKEN_FAIL,
+				"statusText" : e.GetMsg(e.ERROR_AUTH_CHECK_TOKEN_FAIL),
+				"currentAuthority": "guest",
 			})
 
 			c.Abort()
