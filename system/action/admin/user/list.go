@@ -9,6 +9,7 @@ import (
 
 
 type ListResponse struct {
+	Id			string	`json:"id"`
 	Username	string	`json:"username"`
 	Name		string	`json:"name"`
 	Auth 		string	`json:"auth"`
@@ -31,6 +32,7 @@ func List(c *gin.Context) {
 
 	for _, row := range users {
 		tempUser := ListResponse{
+			Id:			row.Id.Hex(),
 			Username:	row.Username,
 			Name:		row.Name,
 			Auth: 		row.Permission,

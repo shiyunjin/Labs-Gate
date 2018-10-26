@@ -42,6 +42,9 @@ func Router() *gin.Engine {
 				userGroup := api.Group("/user")
 				{
 					userGroup.GET("/list", AdminUser.List)
+					userGroup.POST("/edit", AdminUser.Edit)
+					userGroup.POST("/reset", AdminUser.Reset)
+					userGroup.POST("/del", AdminUser.Del)
 				}
 			}
 		}
