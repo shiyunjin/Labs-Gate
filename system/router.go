@@ -37,15 +37,21 @@ func Router() *gin.Engine {
 			api.GET("/profile", user.Profile)
 			api.GET("/authority", user.Authority)
 
+
+			userGroup := api.Group("/user")
+			{
+				userGroup.POST("/pass", user.Pass)
+			}
+
 			api.Use(admin.Need())
 			{
-				userGroup := api.Group("/user")
+				adminUserGroup := api.Group("/user")
 				{
-					userGroup.GET("/list", AdminUser.List)
-					userGroup.POST("/edit", AdminUser.Edit)
-					userGroup.POST("/reset", AdminUser.Reset)
-					userGroup.POST("/del", AdminUser.Del)
-					userGroup.POST("/add", AdminUser.Add)
+					adminUserGroup.GET("/list", AdminUser.List)
+					adminUserGroup.POST("/edit", AdminUser.Edit)
+					adminUserGroup.POST("/reset", AdminUser.Reset)
+					adminUserGroup.POST("/del", AdminUser.Del)
+					adminUserGroup.POST("/add", AdminUser.Add)
 				}
 			}
 		}
