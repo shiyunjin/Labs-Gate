@@ -5,6 +5,8 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/shiyunjin/SchoolNetwork/system/action/network"
+	"github.com/shiyunjin/SchoolNetwork/system/action/rom"
 	"github.com/shiyunjin/SchoolNetwork/system/action/user"
 	AdminUser "github.com/shiyunjin/SchoolNetwork/system/action/admin/user"
 	"github.com/shiyunjin/SchoolNetwork/system/config"
@@ -41,6 +43,14 @@ func Router() *gin.Engine {
 			userGroup := api.Group("/user")
 			{
 				userGroup.POST("/pass", user.Pass)
+			}
+
+			RomGroup := api.Group("/rom")
+			{
+				RomGroup.GET("/list", rom.List)
+
+				RomGroup.POST("/:code/open", network.OpenRom)
+				RomGroup.POST("/:code/close", network.CloseRom)
 			}
 
 			api.Use(admin.Need())
