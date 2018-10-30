@@ -10,7 +10,18 @@ import (
 )
 
 type RomResponse struct {
+	Rom		model.Rom
+}
 
+func RomGet(db *mgo.Database, code string) (result RomResponse,err error) {
+
+	err = db.C(model.CollectionRom).Pipe([]bson.M{
+		{"$unwind": "$rom"},
+		{"$match": bson.M{"rom.code": code}},
+		{"$project": bson.M{"rom": 1,"_id": 0}},
+	}).One(&result)
+
+	return result, err
 }
 
 func OpenRom(c *gin.Context) {
@@ -18,18 +29,11 @@ func OpenRom(c *gin.Context) {
 
 	// TODO: add user permission auth
 
-	result := bson.M{}
 	db := c.MustGet("db").(*mgo.Database)
-	err := db.C(model.CollectionRom).Pipe([]bson.M{
-		{"$unwind": "$rom"},
-		{"$match": bson.M{"rom.code": code}},
-		{"$project": bson.M{"rom": 1,"_id": 0}},
-	}).One(&result)
-
-	//rom := result["rom"]
+	result, err := RomGet(db, code)
 
 	// Log Rom data for test
-	//fmt.Println()
+	fmt.Println(result.Rom.Machine)
 
 	// TODO: each machine to connect server with telnet for open network
 
@@ -48,20 +52,11 @@ func CloseRom(c *gin.Context) {
 
 	// TODO: add user permission auth
 
-	result := model.Roms{}
 	db := c.MustGet("db").(*mgo.Database)
-	err := db.C(model.CollectionRom).Find(nil).Select(bson.M{
-		"rom": bson.M{
-			"$elemMatch": bson.M{
-				"code": code,
-			},
-		},
-	}).One(&result)
-
-	rom := result.Rom[0]
+	result, err := RomGet(db, code)
 
 	// Log Rom data for test
-	fmt.Printf("%v", rom)
+	fmt.Println(result.Rom.Machine)
 
 	// TODO: each machine to connect server with telnet for close network
 
