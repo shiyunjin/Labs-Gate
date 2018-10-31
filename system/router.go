@@ -45,12 +45,16 @@ func Router() *gin.Engine {
 				userGroup.POST("/pass", user.Pass)
 			}
 
-			RomGroup := api.Group("/rom")
-			{
-				RomGroup.GET("/list", rom.List)
+			api.GET("/roms", rom.List)
 
-				RomGroup.POST("/:code/open", network.OpenRom)
-				RomGroup.POST("/:code/close", network.CloseRom)
+			romGroup := api.Group("/rom")
+			{
+				romGroup.POST("/:code/open", network.OpenRom)
+				romGroup.POST("/:code/close", network.CloseRom)
+
+				romGroup.GET("/:code/machine", rom.Machine)
+				//romGroup.POST("/:code/machine/:ip/open")
+				//romGroup.POST("/:code/machine/:ip/close")
 			}
 
 			api.Use(admin.Need())

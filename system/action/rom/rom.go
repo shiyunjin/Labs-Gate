@@ -5,6 +5,7 @@ import (
 	"github.com/shiyunjin/SchoolNetwork/system/e"
 	"github.com/shiyunjin/SchoolNetwork/system/model"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"strconv"
 )
 
@@ -56,6 +57,53 @@ func List(c *gin.Context) {
 			tempList = append(tempList, tempRom)
 		}
 		data.DataSource = append(data.DataSource, tempList)
+	}
+
+	c.JSON(e.SUCCESS, gin.H{
+		"status" : e.SUCCESS,
+		"statusText" : e.GetMsg(e.SUCCESS),
+		"data" : data,
+	})
+}
+
+type MachineResponse struct {
+	Rom		model.Rom
+}
+
+type MachineData struct {
+	Ip 		string 	`json:"ip"`
+	Mac 	string	`json:"mac"`
+	Des 	string	`json:"des"`
+	Status 	string	`json:"status"`
+}
+
+func Machine(c *gin.Context) {
+	code := c.Param("code")
+
+	db := c.MustGet("db").(*mgo.Database)
+	rom := MachineResponse{}
+	// TODO: 目前是显示所有机器，需要按权限显示
+
+	err := db.C(model.CollectionRom).Pipe([]bson.M{
+		{"$unwind": "$rom"},
+		{"$match": bson.M{"rom.code": code}},
+		{"$project": bson.M{"rom": 1,"_id": 0}},
+	}).One(&rom)
+
+	if err != nil {
+		c.Error(err)
+	}
+
+	var data []MachineData
+
+	for _, machine := range rom.Rom.Machine {
+		tempMachine := MachineData{
+			Ip:		machine.Ip,
+			Mac: 	machine.Mac,
+			Des: 	machine.Des,
+			Status: "OPEN",
+		}
+		data = append(data, tempMachine)
 	}
 
 	c.JSON(e.SUCCESS, gin.H{
