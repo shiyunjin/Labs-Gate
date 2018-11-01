@@ -53,8 +53,8 @@ func Router() *gin.Engine {
 				romGroup.POST("/:code/close", network.CloseRom)
 
 				romGroup.GET("/:code/machine", rom.Machine)
-				//romGroup.POST("/:code/machine/:ip/open")
-				//romGroup.POST("/:code/machine/:ip/close")
+				romGroup.POST("/:code/machine/:ip/open", network.OpenMachine)
+				romGroup.POST("/:code/machine/:ip/close", network.CloseMachine)
 			}
 
 			api.Use(admin.Need())

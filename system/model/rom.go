@@ -19,12 +19,12 @@ type Rom struct {
 	Code    string
 	Vlan    string
 	Device  string
-	Machine []Machine
-	Admin   []bson.ObjectId
+	Machine []Machine		`bson:"machine"`
+	Admin   []bson.ObjectId `bson:"admin"`
 }
 
 type Machine struct {
-	Ip  string
-	Mac string
-	Des string
+	Ip  string	`bson:"ip"`
+	Mac string	`bson:"mac"`
+	Des string	`bson:"bes"`
 }
