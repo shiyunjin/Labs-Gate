@@ -5,6 +5,8 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/shiyunjin/SchoolNetwork/system/action/admin/floor"
+	"github.com/shiyunjin/SchoolNetwork/system/action/admin/lab"
 	"github.com/shiyunjin/SchoolNetwork/system/action/network"
 	"github.com/shiyunjin/SchoolNetwork/system/action/rom"
 	"github.com/shiyunjin/SchoolNetwork/system/action/user"
@@ -66,6 +68,22 @@ func Router() *gin.Engine {
 					adminUserGroup.POST("/reset", AdminUser.Reset)
 					adminUserGroup.POST("/del", AdminUser.Del)
 					adminUserGroup.POST("/add", AdminUser.Add)
+				}
+
+				adminFloorGroup := api.Group("/floor")
+				{
+					adminFloorGroup.GET("", 			floor.List)
+					adminFloorGroup.POST("/edit", 	floor.Edit)
+					adminFloorGroup.POST("/add", 	floor.Add)
+					adminFloorGroup.POST("/del", 	floor.Del)
+				}
+
+				adminlabGroup := api.Group("/lab")
+				{
+					adminlabGroup.GET("", 		lab.List)
+					adminlabGroup.POST("/add", 	lab.Add)
+					adminlabGroup.POST("/del",	lab.Del)
+					adminlabGroup.POST("/edit",	lab.Edit)
 				}
 			}
 		}
