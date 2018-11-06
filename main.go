@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/shiyunjin/SchoolNetwork/system"
-	"github.com/shiyunjin/SchoolNetwork/system/config"
-	"github.com/shiyunjin/SchoolNetwork/system/db"
+	"github.com/shiyunjin/Labs-Gate/system"
+	"github.com/shiyunjin/Labs-Gate/system/config"
+	"github.com/shiyunjin/Labs-Gate/system/db"
 )
 
 func main() {

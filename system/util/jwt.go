@@ -1,7 +1,7 @@
 package util
 
 import (
-	"github.com/shiyunjin/SchoolNetwork/system/config"
+	"github.com/shiyunjin/Labs-Gate/system/config"
 	"gopkg.in/mgo.v2/bson"
 	"time"
 

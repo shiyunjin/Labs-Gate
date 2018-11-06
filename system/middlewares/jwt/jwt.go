@@ -3,9 +3,9 @@ package jwt
 import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/shiyunjin/SchoolNetwork/system/e"
-	"github.com/shiyunjin/SchoolNetwork/system/model"
-	"github.com/shiyunjin/SchoolNetwork/system/util"
+	"github.com/shiyunjin/Labs-Gate/system/e"
+	"github.com/shiyunjin/Labs-Gate/system/model"
+	"github.com/shiyunjin/Labs-Gate/system/util"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"time"

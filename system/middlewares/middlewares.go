@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/shiyunjin/SchoolNetwork/system/db"
+	"github.com/shiyunjin/Labs-Gate/system/db"
 )
 
 func Connect(c *gin.Context) {

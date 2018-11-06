@@ -3,8 +3,8 @@ package network
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/shiyunjin/SchoolNetwork/system/e"
-	"github.com/shiyunjin/SchoolNetwork/system/model"
+	"github.com/shiyunjin/Labs-Gate/system/e"
+	"github.com/shiyunjin/Labs-Gate/system/model"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )

@@ -3,8 +3,8 @@ package user
 import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/shiyunjin/SchoolNetwork/system/e"
-	"github.com/shiyunjin/SchoolNetwork/system/util"
+	"github.com/shiyunjin/Labs-Gate/system/e"
+	"github.com/shiyunjin/Labs-Gate/system/util"
 )
 
 func Profile(c *gin.Context) {
