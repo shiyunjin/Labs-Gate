@@ -7,10 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shiyunjin/Labs-Gate/system/action/admin/floor"
 	"github.com/shiyunjin/Labs-Gate/system/action/admin/lab"
+	AdminUser "github.com/shiyunjin/Labs-Gate/system/action/admin/user"
+	AdminRom  "github.com/shiyunjin/Labs-Gate/system/action/admin/rom"
 	"github.com/shiyunjin/Labs-Gate/system/action/network"
 	"github.com/shiyunjin/Labs-Gate/system/action/rom"
 	"github.com/shiyunjin/Labs-Gate/system/action/user"
-	AdminUser "github.com/shiyunjin/Labs-Gate/system/action/admin/user"
 	"github.com/shiyunjin/Labs-Gate/system/config"
 	"github.com/shiyunjin/Labs-Gate/system/middlewares"
 	"github.com/shiyunjin/Labs-Gate/system/middlewares/admin"
@@ -84,6 +85,11 @@ func Router() *gin.Engine {
 					adminLabGroup.POST("/add", 	lab.Add)
 					adminLabGroup.POST("/del",	lab.Del)
 					adminLabGroup.POST("/edit",	lab.Edit)
+				}
+
+				adminRomGroup := api.Group("/rom")
+				{
+					adminRomGroup.POST("/:code/machine/:ip/del", AdminRom.Del)
 				}
 			}
 		}
