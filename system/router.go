@@ -5,6 +5,7 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/shiyunjin/Labs-Gate/system/action/admin/device"
 	"github.com/shiyunjin/Labs-Gate/system/action/admin/floor"
 	"github.com/shiyunjin/Labs-Gate/system/action/admin/lab"
 	AdminUser "github.com/shiyunjin/Labs-Gate/system/action/admin/user"
@@ -90,6 +91,15 @@ func Router() *gin.Engine {
 				adminRomGroup := api.Group("/rom")
 				{
 					adminRomGroup.POST("/:code/machine/:ip/del", AdminRom.Del)
+				}
+
+				adminDeviceGroup := api.Group("/device")
+				{
+					adminDeviceGroup.GET("", 	 		device.List)
+					adminDeviceGroup.POST("/add", 		device.Add)
+					adminDeviceGroup.POST("/del", 		device.Del)
+					adminDeviceGroup.POST("/edit",		device.Edit)
+					adminDeviceGroup.POST("/interface",	device.Interface)
 				}
 			}
 		}
