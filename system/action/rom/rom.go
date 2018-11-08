@@ -109,6 +109,7 @@ func Machine(c *gin.Context) {
 	c.JSON(e.SUCCESS, gin.H{
 		"status" : e.SUCCESS,
 		"statusText" : e.GetMsg(e.SUCCESS),
+		"name" : rom.Rom.Name,
 		"data" : data,
 	})
 }
