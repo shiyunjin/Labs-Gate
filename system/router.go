@@ -78,12 +78,12 @@ func Router() *gin.Engine {
 					adminFloorGroup.POST("/del", 	floor.Del)
 				}
 
-				adminlabGroup := api.Group("/lab")
+				adminLabGroup := api.Group("/lab")
 				{
-					adminlabGroup.GET("", 		lab.List)
-					adminlabGroup.POST("/add", 	lab.Add)
-					adminlabGroup.POST("/del",	lab.Del)
-					adminlabGroup.POST("/edit",	lab.Edit)
+					adminLabGroup.GET("", 		lab.List)
+					adminLabGroup.POST("/add", 	lab.Add)
+					adminLabGroup.POST("/del",	lab.Del)
+					adminLabGroup.POST("/edit",	lab.Edit)
 				}
 			}
 		}
