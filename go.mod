@@ -1,4 +1,4 @@
-module github.com/shiyunjin/SchoolNetwork
+module github.com/shiyunjin/Labs-Gate
 
 require (
 	github.com/fsnotify/fsnotify v1.4.7
