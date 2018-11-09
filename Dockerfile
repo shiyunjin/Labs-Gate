@@ -26,8 +26,8 @@ FROM scratch
 
 ENV APP_DIR=/app
 
-COPY config.tson /app/config.tson
-COPY run.sh      /app/run.sh
+COPY ./config.tson /app/config.tson
+COPY ./run.sh      /app/run.sh
 
 RUN chmod +x /app/run.sh
 
