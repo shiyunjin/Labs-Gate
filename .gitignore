@@ -11,7 +11,11 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# JetBrains
 .idea
+
+# Config
+config.json
 
 # MAC
 .DS_Store

@@ -26,11 +26,14 @@ FROM scratch
 
 ENV APP_DIR=/app
 
-COPY --from=go-builder /go/src/github.com/shiyunjin/Labs-Gate/lab-gate /app/lab-gate
-COPY --from=go-builder /go/src/github.com/shiyunjin/Labs-Gate/config.json /app/config.json
+ADD config.tson /app/config.tson
+ADD run.sh      /app/run.sh
 
+COPY --from=go-builder /go/src/github.com/shiyunjin/Labs-Gate/lab-gate /app/lab-gate
 COPY --from=react-builder /app/view/build /app/system/view/build
 
 WORKDIR $APP_DIR
 
-CMD ["/app/lab-gate"]
+EXPOSE 8080
+
+CMD ["/app/run.sh"]
