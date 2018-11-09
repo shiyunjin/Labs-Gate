@@ -29,6 +29,8 @@ ENV APP_DIR=/app
 ADD config.tson /app/config.tson
 ADD run.sh      /app/run.sh
 
+RUN sudo chmod +x /app/run.sh
+
 COPY --from=go-builder /go/src/github.com/shiyunjin/Labs-Gate/lab-gate /app/lab-gate
 COPY --from=react-builder /app/view/build /app/system/view/build
 
