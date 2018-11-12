@@ -20,7 +20,7 @@ type Rom struct {
 	Vlan    string
 	Device  string
 	Machine []Machine		`bson:"machine"`
-	Admin   []bson.ObjectId `bson:"admin"`
+	Admin   []string 		`bson:"admin"`
 }
 
 type Machine struct {
