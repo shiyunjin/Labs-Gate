@@ -1,0 +1,14 @@
+{
+  "mongodb": {
+    "host": "127.0.0.1",
+    "port": "27017",
+    "name": "schoolnetwork",
+    "username": "",
+    "password": ""
+  },
+  "port": "8080",
+  "jwt": {
+    "secret": "bda25a151f65a52z1a551f5az5e52s56156re5eas65ac45uy63z3d5g4y1f5d5t5u4iu4sd5s5sz11"
+  },
+  "secret": "a15f6a165rg415r161d564649a61b13g1aw53ed3a5135r153s13a51z123d1f56ae4fraw65"
+}
