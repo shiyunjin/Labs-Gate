@@ -17,7 +17,7 @@ before_install:
 - go get github.com/alecthomas/gometalinter
 - gometalinter --install
 install:
-- gometalinter --deadline=120s --disable-all --enable=vet --enable=vetshadow --enable=gotype
+- gometalinter --vendor --deadline=120s --disable-all --enable=vet --enable=vetshadow --enable=gotype
   --enable=deadcode --enable=gocyclo --enable=golint --enable=varcheck --enable=structcheck
   --enable=maligned --enable=errcheck --enable=megacheck --enable=dupl --enable=ineffassign
   --enable=interfacer --enable=unconvert --enable=goconst --enable=gosec --enable=safesql
