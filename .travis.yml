@@ -14,14 +14,7 @@ before_install:
 - go get ./...
 - go get golang.org/x/tools/cmd/cover
 - go get github.com/mattn/goveralls
-- go get github.com/alecthomas/gometalinter
-- gometalinter --install
 install:
-- gometalinter --vendor --deadline=120s --disable-all --enable=vet --enable=vetshadow --enable=gotype
-  --enable=deadcode --enable=gocyclo --enable=golint --enable=varcheck --enable=structcheck
-  --enable=maligned --enable=errcheck --enable=megacheck --enable=dupl --enable=ineffassign
-  --enable=interfacer --enable=unconvert --enable=goconst --enable=gosec --enable=safesql
-  ./...
 - go test ./... -v -covermode=count -coverprofile=coverage.out
 - goveralls -coverprofile=coverage.out -service=travis-pro -repotoken $COVERALLS_TOKEN
 - CGO_ENABLED=0 go build
