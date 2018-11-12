@@ -1,4 +1,4 @@
-# Labs-Gate
+# Labs;Gate
 [![Build Status](https://travis-ci.com/shiyunjin/Labs-Gate.svg?branch=master)](https://travis-ci.com/shiyunjin/Labs-Gate)
 [![Coverage Status](https://coveralls.io/repos/github/shiyunjin/Labs-Gate/badge.svg?branch=master)](https://coveralls.io/github/shiyunjin/Labs-Gate?branch=master)
 
