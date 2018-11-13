@@ -83,6 +83,8 @@ func Login(c *gin.Context) {
 }
 
 func Logout(c *gin.Context) {
+	c.SetCookie("token", "0",-1,"/","",false,false)
+
 	c.JSON(e.SUCCESS, gin.H{
 		"status":           e.SUCCESS,
 		"statusText":       e.GetMsg(e.SUCCESS),
