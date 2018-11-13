@@ -1,9 +1,11 @@
 package rom
 
 import (
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/shiyunjin/Labs-Gate/system/e"
 	"github.com/shiyunjin/Labs-Gate/system/model"
+	"github.com/shiyunjin/Labs-Gate/system/util"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"strconv"
@@ -32,8 +34,19 @@ func List(c *gin.Context) {
 
 	db := c.MustGet("db").(*mgo.Database)
 	roms := []model.Roms{}
-	// TODO: 目前是显示所有机器，需要按权限显示
-	err := db.C(model.CollectionRom).Find(nil).Sort("name").All(&roms)
+
+	// 管理员显示所有机器，其他用户需要按权限显示
+	session := sessions.Default(c)
+	v := session.Get("NowUser")
+	user := v.(*util.Claims)
+	var match bson.M
+	if user.Auth == "admin" {
+		match = nil
+	} else {
+		match = bson.M{"rom.admin": user.Username}
+	}
+
+	err := db.C(model.CollectionRom).Find(match).Sort("name").All(&roms)
 	if err != nil {
 		c.Error(err)
 	}
@@ -48,15 +61,22 @@ func List(c *gin.Context) {
 		data.Tabs = append(data.Tabs, tempTab)
 		tempList := []RomResponse{}
 		for _, rom := range lou.Rom {
-			tempRom := RomResponse{
-				Name: rom.Name,
-				Code: rom.Code,
-				Desc: "本实验室机器数量：" + strconv.Itoa(len(rom.Machine)) + "台",
-				Acl:  true, // TODO: add status
+			if user.Auth == "admin" || util.In_array(user.Username, rom.Admin) {
+				tempRom := RomResponse{
+					Name: rom.Name,
+					Code: rom.Code,
+					Desc: "本实验室机器数量：" + strconv.Itoa(len(rom.Machine)) + "台",
+					Acl:  true, // TODO: add status
+				}
+				tempList = append(tempList, tempRom)
 			}
-			tempList = append(tempList, tempRom)
 		}
 		data.DataSource = append(data.DataSource, tempList)
+	}
+
+	if len(data.Tabs) == 0 {
+		data.Tabs = []TabResponse{}
+		data.DataSource = [][]RomResponse{}
 	}
 
 	c.JSON(e.SUCCESS, gin.H{
@@ -82,11 +102,21 @@ func Machine(c *gin.Context) {
 
 	db := c.MustGet("db").(*mgo.Database)
 	rom := MachineResponse{}
-	// TODO: 目前是显示所有机器，需要按权限显示
+
+	// 管理员显示所有机器，其他用户需要按权限显示
+	session := sessions.Default(c)
+	v := session.Get("NowUser")
+	user := v.(*util.Claims)
+	var match bson.M
+	if user.Auth == "admin" {
+		match = bson.M{"rom.code": code}
+	} else {
+		match = bson.M{"rom.code": code, "rom.admin": user.Username}
+	}
 
 	err := db.C(model.CollectionRom).Pipe([]bson.M{
 		{"$unwind": "$rom"},
-		{"$match": bson.M{"rom.code": code}},
+		{"$match": match},
 		{"$project": bson.M{"rom": 1,"_id": 0}},
 	}).One(&rom)
 
