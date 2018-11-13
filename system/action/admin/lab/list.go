@@ -5,7 +5,6 @@ import (
 	"github.com/shiyunjin/Labs-Gate/system/e"
 	"github.com/shiyunjin/Labs-Gate/system/model"
 	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
 	"strconv"
 )
 
@@ -16,7 +15,7 @@ type RomItem struct {
 	Device 	string			`json:"device"`
 	Vlan 	string			`json:"vlan"`
 	Machine string 			`json:"machine"`
-	Admin 	[]bson.ObjectId `json:"admin"`
+	Admin 	[]string		`json:"admin"`
 }
 
 func List(c *gin.Context) {

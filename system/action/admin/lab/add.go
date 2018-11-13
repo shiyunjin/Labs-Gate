@@ -58,7 +58,7 @@ func Add(c *gin.Context) {
 			Device: AddData.Device,
 			Vlan: 	AddData.Vlan,
 			Machine:"0台机器",
-			Admin: 	[]bson.ObjectId{},
+			Admin: 	[]string{},
 		},
 	})
 }
