@@ -31,6 +31,12 @@ func List(c *gin.Context) {
 
 	for _, lou := range roms {
 		for _, rom := range lou.Rom {
+			var Admin []string
+			if rom.Admin == nil {
+				Admin = []string{}
+			} else {
+				Admin = rom.Admin
+			}
 			temprom := RomItem{
 				Floor: 	lou.Id.Hex(),
 				Name: 	rom.Name,
@@ -38,7 +44,7 @@ func List(c *gin.Context) {
 				Device: rom.Device,
 				Vlan: 	rom.Vlan,
 				Machine:strconv.Itoa(len(rom.Machine)) + "台机器",
-				Admin: 	rom.Admin,
+				Admin: 	Admin,
 			}
 			list = append(list, temprom)
 		}
