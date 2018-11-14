@@ -16,7 +16,7 @@ func Profile(c *gin.Context) {
 		c.JSON(e.SUCCESS, gin.H{
 			"name": "???",
 			"department": "guest",
-			"avatar": "https://img.alicdn.com/tfs/TB1L6tBXQyWBuNjy0FpXXassXXa-80-80.png",
+			"avatar": "/public/avatar.png",
 		})
 		return
 	} else {
@@ -26,7 +26,7 @@ func Profile(c *gin.Context) {
 	c.JSON(e.SUCCESS, gin.H{
 		"name": user.Name,
 		"department": user.Auth,
-		"avatar": "https://img.alicdn.com/tfs/TB1L6tBXQyWBuNjy0FpXXassXXa-80-80.png",
+		"avatar": "/public/avatar.png",
 	})
 }
 
