@@ -124,7 +124,7 @@ func Machine(c *gin.Context) {
 		c.Error(err)
 	}
 
-	var data []MachineData
+	data := []MachineData{}
 
 	for _, machine := range rom.Rom.Machine {
 		tempMachine := MachineData{
