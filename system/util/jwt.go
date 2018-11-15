@@ -9,7 +9,7 @@ import (
 
 )
 
-var jwtSecret = []byte(config.Get("jwt.secret").(string))
+var jwtSecret []byte
 
 type Claims struct {
 	Id 			bson.ObjectId
@@ -18,6 +18,10 @@ type Claims struct {
 	Hash 		string
 	Auth 		string
 	jwt.StandardClaims
+}
+
+func JwtInit() {
+	jwtSecret = []byte(config.Get("jwt.secret").(string))
 }
 
 func GenerateToken(id bson.ObjectId, name, username, hash, auth string, exp int) (string, error) {

@@ -1,28 +1,35 @@
-package test
+package user
 
 import (
 	"bytes"
 	"github.com/gin-gonic/gin"
+	"github.com/shiyunjin/Labs-Gate/system/config"
 	"github.com/shiyunjin/Labs-Gate/system/db"
 	"github.com/shiyunjin/Labs-Gate/system/e"
-	"github.com/shiyunjin/Labs-Gate/system"
+	"github.com/shiyunjin/Labs-Gate/system/middlewares"
+	"github.com/shiyunjin/Labs-Gate/system/util"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
-
 func TestLogin(t *testing.T) {
-	db.Connect();
-
 	gin.SetMode(gin.TestMode)
-	server := router.Router()
 
+	config.Init()
+	util.JwtInit()
+
+	db.Connect()
+
+	server := gin.New()
+	server.Use(middlewares.Connect)
+
+	server.POST("/login", Login)
 
 	jsonStr := []byte(`{"username":"test","password":"test","checkbox":false}`)
 
-	req := httptest.NewRequest(http.MethodPost, "/api/v1/login", bytes.NewBuffer(jsonStr))
+	req := httptest.NewRequest(http.MethodPost, "/login", bytes.NewBuffer(jsonStr))
 
 	w := httptest.NewRecorder()
 
