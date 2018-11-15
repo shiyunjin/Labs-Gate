@@ -13,9 +13,9 @@ import (
 func fuckJWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		claims := &util.Claims{
-			Id:       "123",
-			Name:     "admin",
-			Username: "admin",
+			Id:       "5bd00e64b847d59e683f2024",
+			Name:     "syj",
+			Username: "syj",
 			Auth:     "admin",
 			Hash:     "testhash",
 		}
