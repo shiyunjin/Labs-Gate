@@ -8,12 +8,13 @@ import (
 	"github.com/shiyunjin/Labs-Gate/system/db"
 	"github.com/shiyunjin/Labs-Gate/system/middlewares"
 	"github.com/shiyunjin/Labs-Gate/system/util"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func fuckJWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		claims := &util.Claims{
-			Id:       "5bd00e64b847d59e683f2024",
+			Id:       bson.ObjectIdHex("5bd00e64b847d59e683f2024"),
 			Name:     "syj",
 			Username: "syj",
 			Auth:     "admin",
