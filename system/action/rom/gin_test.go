@@ -1,4 +1,4 @@
-package user
+package rom
 
 import (
 	"github.com/gin-contrib/sessions"

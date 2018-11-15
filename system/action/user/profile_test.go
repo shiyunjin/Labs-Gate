@@ -1,33 +1,12 @@
 package user
 
 import (
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-gonic/gin"
 	"github.com/shiyunjin/Labs-Gate/system/e"
-	"github.com/shiyunjin/Labs-Gate/system/util"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
-func fuckJWT() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		claims := &util.Claims{
-			Id:       "123",
-			Name:     "admin",
-			Username: "admin",
-			Auth:     "admin",
-			Hash:     "testhash",
-		}
-
-		session := sessions.Default(c)
-		session.Set("NowUser", claims)
-
-		c.Next()
-	}
-}
-
-
 
 func TestProfile(t *testing.T) {
 	server := testGinWithLogin()
