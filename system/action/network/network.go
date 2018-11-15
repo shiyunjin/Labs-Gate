@@ -52,12 +52,16 @@ func MachineGet(c *gin.Context) (result MachineResponse,err error) {
 	return result, err
 }
 
-func OpenRom(c *gin.Context) {
-	result, err := RomGet(c)
-
+func getUser(c *gin.Context) *util.Claims {
 	session := sessions.Default(c)
 	v := session.Get("NowUser")
-	user := v.(*util.Claims)
+	return v.(*util.Claims)
+}
+
+func OpenRom(c *gin.Context) {
+	result, err := RomGet(c)
+	user := getUser(c)
+
 	if user.Auth != "admin" && !util.In_array(user.Username, result.Rom.Admin) {
 		c.JSON(e.SUCCESS, gin.H{
 			"status" : e.UNAUTHORRIZED,
@@ -82,10 +86,8 @@ func OpenRom(c *gin.Context) {
 
 func CloseRom(c *gin.Context) {
 	result, err := RomGet(c)
+	user := getUser(c)
 
-	session := sessions.Default(c)
-	v := session.Get("NowUser")
-	user := v.(*util.Claims)
 	if user.Auth != "admin" && !util.In_array(user.Username, result.Rom.Admin) {
 		c.JSON(e.SUCCESS, gin.H{
 			"status" : e.UNAUTHORRIZED,
@@ -110,10 +112,8 @@ func CloseRom(c *gin.Context) {
 
 func OpenMachine(c *gin.Context) {
 	result, err := MachineGet(c)
+	user := getUser(c)
 
-	session := sessions.Default(c)
-	v := session.Get("NowUser")
-	user := v.(*util.Claims)
 	if user.Auth != "admin" && !util.In_array(user.Username, result.Rom.Admin) {
 		c.JSON(e.SUCCESS, gin.H{
 			"status" : e.UNAUTHORRIZED,
@@ -138,10 +138,8 @@ func OpenMachine(c *gin.Context) {
 
 func CloseMachine(c *gin.Context) {
 	result, err := MachineGet(c)
+	user := getUser(c)
 
-	session := sessions.Default(c)
-	v := session.Get("NowUser")
-	user := v.(*util.Claims)
 	if user.Auth != "admin" && !util.In_array(user.Username, result.Rom.Admin) {
 		c.JSON(e.SUCCESS, gin.H{
 			"status" : e.UNAUTHORRIZED,
