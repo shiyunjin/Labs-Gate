@@ -15,7 +15,7 @@
 .idea
 
 # Config
-config.json
+/config.json
 
 # MAC
 .DS_Store
