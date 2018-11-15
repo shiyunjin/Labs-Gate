@@ -27,7 +27,7 @@ func TestProfile(t *testing.T) {
 		t.Fatalf("get profile test error")
 	}
 
-	if string(body) != `{"avatar":"/public/avatar.png","department":"admin","name":"admin"}` {
+	if string(body) != `{"avatar":"/public/avatar.png","department":"admin","name":"syj"}` {
 		t.Fatalf("get profile body error: %v", string(body))
 	}
 }
