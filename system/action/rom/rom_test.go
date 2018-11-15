@@ -29,7 +29,7 @@ func TestList(t *testing.T) {
 func TestMachine(t *testing.T) {
 	server := testGinWithLogin()
 
-	server.GET("/machine", List)
+	server.GET("/machine", Machine)
 
 
 	req := httptest.NewRequest(http.MethodGet, "/machine", nil)
