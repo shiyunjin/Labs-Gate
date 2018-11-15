@@ -88,6 +88,22 @@ func TestLoginDummy(t *testing.T) {
 
 }
 
+func TestLoginNil(t *testing.T) {
+	server := testGin()
+
+	server.POST("/login", Login)
+
+
+	req := httptest.NewRequest(http.MethodPost, "/login", nil)
+
+	w := httptest.NewRecorder()
+
+	server.ServeHTTP(w, req)
+
+	_ = w.Result()
+
+}
+
 func TestLogout(t *testing.T) {
 	server := testGin()
 
