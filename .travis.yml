@@ -15,11 +15,12 @@ before_install:
 - go get ./...
 - go get golang.org/x/tools/cmd/cover
 - go get github.com/mattn/goveralls
+- mongorestore -h 127.0.0.1 --port 27017 -d schoolnetwork testdata/schoolnetwork
 install:
 - go test ./... -v -covermode=count -coverprofile=coverage.out
 - goveralls -coverprofile=coverage.out -service=travis-pro -repotoken $COVERALLS_TOKEN
 - CGO_ENABLED=0 go build
-before_script: 
+before_script:
 script: 
 deploy: 
 after_success: 
