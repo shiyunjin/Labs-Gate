@@ -2,31 +2,13 @@ package user
 
 import (
 	"bytes"
-	"github.com/gin-gonic/gin"
-	"github.com/shiyunjin/Labs-Gate/system/config"
-	"github.com/shiyunjin/Labs-Gate/system/db"
 	"github.com/shiyunjin/Labs-Gate/system/e"
-	"github.com/shiyunjin/Labs-Gate/system/middlewares"
-	"github.com/shiyunjin/Labs-Gate/system/util"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
-func testGin() (server *gin.Engine) {
-	gin.SetMode(gin.TestMode)
-
-	config.Init()
-	util.JwtInit()
-
-	db.Connect()
-
-	server = gin.New()
-	server.Use(middlewares.Connect)
-
-	return server
-}
 
 func TestLogin(t *testing.T) {
 	server := testGin()
