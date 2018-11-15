@@ -3,6 +3,7 @@ os:
 - linux
 dist: trusty
 language: go
+services: mongodb
 node_js:
 - node
 matrix:
