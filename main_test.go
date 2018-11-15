@@ -2,13 +2,16 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"os"
 	"testing"
+	"time"
 )
 
-func TestMain(m *testing.M) {
+func TestLocal(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	code := m.Run()
 
-	os.Exit(code)
+	go func() {
+		main()
+	}()
+
+	time.Sleep(3 * time.Second)
 }
