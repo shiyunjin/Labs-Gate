@@ -22,7 +22,10 @@ type MachineResponse struct {
 	}
 }
 
-func RomGet(db *mgo.Database, code string) (result RomResponse,err error) {
+func RomGet(c *gin.Context) (result RomResponse,err error) {
+	code := c.Param("code")
+
+	db := c.MustGet("db").(*mgo.Database)
 
 	err = db.C(model.CollectionRom).Pipe([]bson.M{
 		{"$unwind": "$rom"},
@@ -33,7 +36,11 @@ func RomGet(db *mgo.Database, code string) (result RomResponse,err error) {
 	return result, err
 }
 
-func MachineGet(db *mgo.Database, code string, ip string) (result MachineResponse,err error) {
+func MachineGet(c *gin.Context) (result MachineResponse,err error) {
+	code := c.Param("code")
+	ip := c.Param("ip")
+
+	db := c.MustGet("db").(*mgo.Database)
 
 	err = db.C(model.CollectionRom).Pipe([]bson.M{
 		{"$unwind": "$rom"},
@@ -46,10 +53,7 @@ func MachineGet(db *mgo.Database, code string, ip string) (result MachineRespons
 }
 
 func OpenRom(c *gin.Context) {
-	code := c.Param("code")
-
-	db := c.MustGet("db").(*mgo.Database)
-	result, err := RomGet(db, code)
+	result, err := RomGet(c)
 
 	session := sessions.Default(c)
 	v := session.Get("NowUser")
@@ -77,10 +81,7 @@ func OpenRom(c *gin.Context) {
 }
 
 func CloseRom(c *gin.Context) {
-	code := c.Param("code")
-
-	db := c.MustGet("db").(*mgo.Database)
-	result, err := RomGet(db, code)
+	result, err := RomGet(c)
 
 	session := sessions.Default(c)
 	v := session.Get("NowUser")
@@ -108,11 +109,7 @@ func CloseRom(c *gin.Context) {
 }
 
 func OpenMachine(c *gin.Context) {
-	code := c.Param("code")
-	ip := c.Param("ip")
-
-	db := c.MustGet("db").(*mgo.Database)
-	result, err := MachineGet(db, code, ip)
+	result, err := MachineGet(c)
 
 	session := sessions.Default(c)
 	v := session.Get("NowUser")
@@ -140,11 +137,7 @@ func OpenMachine(c *gin.Context) {
 }
 
 func CloseMachine(c *gin.Context) {
-	code := c.Param("code")
-	ip := c.Param("ip")
-
-	db := c.MustGet("db").(*mgo.Database)
-	result, err := MachineGet(db, code, ip)
+	result, err := MachineGet(c)
 
 	session := sessions.Default(c)
 	v := session.Get("NowUser")
