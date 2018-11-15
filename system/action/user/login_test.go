@@ -14,7 +14,7 @@ import (
 	"testing"
 )
 
-func TestLogin(t *testing.T) {
+func testGin() (server *gin.Engine) {
 	gin.SetMode(gin.TestMode)
 
 	config.Init()
@@ -22,12 +22,18 @@ func TestLogin(t *testing.T) {
 
 	db.Connect()
 
-	server := gin.New()
+	server = gin.New()
 	server.Use(middlewares.Connect)
+
+	return server
+}
+
+func TestLogin(t *testing.T) {
+	server := testGin()
 
 	server.POST("/login", Login)
 
-	jsonStr := []byte(`{"username":"test","password":"test","checkbox":false}`)
+	jsonStr := []byte(`{"username":"admin","password":"admin","checkbox":true}`)
 
 	req := httptest.NewRequest(http.MethodPost, "/login", bytes.NewBuffer(jsonStr))
 
@@ -42,8 +48,80 @@ func TestLogin(t *testing.T) {
 		t.Fatalf("login test error")
 	}
 
-	if string(body) != "{\"currentAuthority\":\"guest\",\"status\":401,\"statusText\":\"unauthorized\"}" {
-		t.Fatalf("body error: %v", string(body))
+	if string(body) != `{"currentAuthority":"admin","status":200,"statusText":"ok"}` {
+		t.Fatalf("login body error: %v", string(body))
+	}
+
+}
+
+func TestLoginEPass(t *testing.T) {
+	server := testGin()
+
+	server.POST("/login", Login)
+
+	jsonStr := []byte(`{"username":"admin","password":"admin123","checkbox":true}`)
+
+	req := httptest.NewRequest(http.MethodPost, "/login", bytes.NewBuffer(jsonStr))
+
+	w := httptest.NewRecorder()
+
+	server.ServeHTTP(w, req)
+
+	resp := w.Result()
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	if resp.StatusCode != e.SUCCESS {
+		t.Fatalf("login err pass test error")
+	}
+
+	if string(body) != `{"currentAuthority":"guest","status":401,"statusText":"unauthorized"}` {
+		t.Fatalf("login err pass body error: %v", string(body))
+	}
+
+}
+
+func TestLoginDummy(t *testing.T) {
+	server := testGin()
+
+	server.POST("/login", Login)
+
+	jsonStr := []byte(`{"username":"testnull","password":"testnull","checkbox":false}`)
+
+	req := httptest.NewRequest(http.MethodPost, "/login", bytes.NewBuffer(jsonStr))
+
+	w := httptest.NewRecorder()
+
+	server.ServeHTTP(w, req)
+
+	resp := w.Result()
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	if resp.StatusCode != e.SUCCESS {
+		t.Fatalf("login dummy test error")
+	}
+
+	if string(body) != `{"currentAuthority":"guest","status":401,"statusText":"unauthorized"}` {
+		t.Fatalf("login dummy body error: %v", string(body))
+	}
+
+}
+
+func TestLogout(t *testing.T) {
+	server := testGin()
+
+	server.POST("/logout", Logout)
+
+	req := httptest.NewRequest(http.MethodPost, "/logout", nil)
+
+	w := httptest.NewRecorder()
+
+	server.ServeHTTP(w, req)
+
+	resp := w.Result()
+	//body, _ := ioutil.ReadAll(resp.Body)
+
+	if resp.StatusCode != e.SUCCESS {
+		t.Fatalf("logout test error")
 	}
 
 }
