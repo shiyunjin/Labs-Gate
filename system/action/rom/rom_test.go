@@ -29,10 +29,10 @@ func TestList(t *testing.T) {
 func TestMachine(t *testing.T) {
 	server := testGinWithLogin()
 
-	server.GET("/machine", Machine)
+	server.GET("/:code/machine", Machine)
 
 
-	req := httptest.NewRequest(http.MethodGet, "/machine", nil)
+	req := httptest.NewRequest(http.MethodGet, "/dx603/machine", nil)
 
 	w := httptest.NewRecorder()
 
