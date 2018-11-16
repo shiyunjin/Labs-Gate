@@ -54,14 +54,16 @@ func Login(c *gin.Context) {
 		user.Hash = "2e224647eeca047c0353eb9745c2f072dc5b2a17"
 	}
 
-	if user.Username != LoginData.Username {
-		c.JSON(e.SUCCESS, gin.H{
-			"status":           e.UNAUTHORRIZED,
-			"statusText":       e.GetMsg(e.UNAUTHORRIZED),
-			"currentAuthority": "guest",
-		})
-		return
-	}
+	// this code not work everywhere
+
+	//if user.Username != LoginData.Username {
+	//	c.JSON(e.SUCCESS, gin.H{
+	//		"status":           e.UNAUTHORRIZED,
+	//		"statusText":       e.GetMsg(e.UNAUTHORRIZED),
+	//		"currentAuthority": "guest",
+	//	})
+	//	return
+	//}
 
 	hash := util.HmacSha1(LoginData.Password, user.Salt)
 
