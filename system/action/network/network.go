@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shiyunjin/Labs-Gate/system/e"
 	"github.com/shiyunjin/Labs-Gate/system/model"
+	"github.com/shiyunjin/Labs-Gate/system/service/model"
 	"github.com/shiyunjin/Labs-Gate/system/util"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -18,6 +19,7 @@ type RomResponse struct {
 type MachineResponse struct {
 	Rom 	struct{
 		Machine 	model.Machine
+		Device		string
 		Admin 		[]string
 	}
 }
@@ -46,7 +48,7 @@ func MachineGet(c *gin.Context) (result MachineResponse,err error) {
 		{"$unwind": "$rom"},
 		{"$unwind": "$rom.machine"},
 		{"$match": bson.M{"rom.machine.ip": ip, "rom.code": code}},
-		{"$project": bson.M{"rom": bson.M{"machine": 1, "admin": 1},"_id": 0}},
+		{"$project": bson.M{"rom": bson.M{"machine": 1, "admin": 1, "device": 1},"_id": 0}},
 	}).One(&result)
 
 	return result, err
@@ -60,6 +62,9 @@ func getUser(c *gin.Context) *util.Claims {
 
 func OpenRom(c *gin.Context) {
 	result, err := RomGet(c)
+	if err != nil {
+		c.Error(err)
+	}
 	user := getUser(c)
 
 	if user.Auth != "admin" && !util.In_array(user.Username, result.Rom.Admin) {
@@ -71,21 +76,30 @@ func OpenRom(c *gin.Context) {
 		// Log Rom data for test
 		fmt.Println(result.Rom.Machine)
 
-		// TODO: each machine to connect server with telnet for open network
-
+		Channel := c.MustGet("Channel").(serviceModel.Channel)
+		resultch := make(chan error)
+		defer close(resultch)
+		Channel.NetworkCh <- serviceModel.NetMsg{Type: 1, Open: 1, Data: result, Callback: resultch}
+		err := <- resultch
 		if err != nil {
-			c.Error(err)
+			c.JSON(e.SUCCESS, gin.H{
+				"status" : e.ERROR,
+				"statusText" : err,
+			})
+		} else {
+			c.JSON(e.SUCCESS, gin.H{
+				"status" : e.SUCCESS,
+				"statusText" : e.GetMsg(e.SUCCESS),
+			})
 		}
-
-		c.JSON(e.SUCCESS, gin.H{
-			"status" : e.SUCCESS,
-			"statusText" : e.GetMsg(e.SUCCESS),
-		})
 	}
 }
 
 func CloseRom(c *gin.Context) {
 	result, err := RomGet(c)
+	if err != nil {
+		c.Error(err)
+	}
 	user := getUser(c)
 
 	if user.Auth != "admin" && !util.In_array(user.Username, result.Rom.Admin) {
@@ -97,16 +111,22 @@ func CloseRom(c *gin.Context) {
 		// Log Rom data for test
 		fmt.Println(result.Rom.Machine)
 
-		// TODO: each machine to connect server with telnet for close network
-
+		Channel := c.MustGet("Channel").(serviceModel.Channel)
+		resultch := make(chan error)
+		defer close(resultch)
+		Channel.NetworkCh <- serviceModel.NetMsg{Type: 1, Open: 0, Data: result, Callback: resultch}
+		err := <- resultch
 		if err != nil {
-			c.Error(err)
+			c.JSON(e.SUCCESS, gin.H{
+				"status" : e.ERROR,
+				"statusText" : err,
+			})
+		} else {
+			c.JSON(e.SUCCESS, gin.H{
+				"status" : e.SUCCESS,
+				"statusText" : e.GetMsg(e.SUCCESS),
+			})
 		}
-
-		c.JSON(e.SUCCESS, gin.H{
-			"status":     e.SUCCESS,
-			"statusText": e.GetMsg(e.SUCCESS),
-		})
 	}
 }
 
