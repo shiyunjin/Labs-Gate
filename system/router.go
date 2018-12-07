@@ -8,8 +8,8 @@ import (
 	"github.com/shiyunjin/Labs-Gate/system/action/admin/device"
 	"github.com/shiyunjin/Labs-Gate/system/action/admin/floor"
 	"github.com/shiyunjin/Labs-Gate/system/action/admin/lab"
+	AdminRom "github.com/shiyunjin/Labs-Gate/system/action/admin/rom"
 	AdminUser "github.com/shiyunjin/Labs-Gate/system/action/admin/user"
-	AdminRom  "github.com/shiyunjin/Labs-Gate/system/action/admin/rom"
 	"github.com/shiyunjin/Labs-Gate/system/action/network"
 	"github.com/shiyunjin/Labs-Gate/system/action/rom"
 	"github.com/shiyunjin/Labs-Gate/system/action/user"
@@ -17,9 +17,10 @@ import (
 	"github.com/shiyunjin/Labs-Gate/system/middlewares"
 	"github.com/shiyunjin/Labs-Gate/system/middlewares/admin"
 	"github.com/shiyunjin/Labs-Gate/system/middlewares/jwt"
+	"github.com/shiyunjin/Labs-Gate/system/service/model"
 )
 
-func Router() *gin.Engine {
+func Router(Channel serviceModel.Channel) *gin.Engine {
 	// Disable Console Color
 	// gin.DisableConsoleColor()
 	r := gin.Default()
@@ -28,6 +29,10 @@ func Router() *gin.Engine {
 	// Support session
 	store := cookie.NewStore([]byte(config.Get("secret").(string)))
 	r.Use(sessions.Sessions("SESSION", store))
+	r.Use(func (c *gin.Context){
+		c.Set("Channel", Channel)
+		c.Next()
+	})
 
 	// Serve the frontend
 	r.Use(static.Serve("/", static.LocalFile("system/view/build", true)))
