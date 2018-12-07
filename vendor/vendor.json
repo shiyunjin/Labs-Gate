@@ -177,10 +177,10 @@
 			"revisionTime": "2018-10-09T02:10:09Z"
 		},
 		{
-			"checksumSHA1": "TdLLY9BtZGuxXO51ICZwIQpHE84=",
+			"checksumSHA1": "JS/7UnsPaxgrDZzmpJbNT5+Zjrk=",
 			"path": "github.com/shiyunjin/go-telnet-cisco",
-			"revision": "078e52f594693773e2791d28046e002df4c7ca20",
-			"revisionTime": "2018-10-22T03:36:35Z"
+			"revision": "29801c74be3016f61f690b3c9e2fcf070bdf80df",
+			"revisionTime": "2018-12-07T09:16:22Z"
 		},
 		{
 			"checksumSHA1": "RXdGcEWihBEokWLc+LTy/UnI8OM=",
@@ -285,5 +285,5 @@
 			"revisionTime": "2018-03-28T19:50:20Z"
 		}
 	],
-	"rootPath": "github.com/shiyunjin/SchoolNetwork"
+	"rootPath": "github.com/shiyunjin/Labs-Gate"
 }

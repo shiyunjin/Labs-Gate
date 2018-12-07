@@ -2,37 +2,37 @@ package telnet
 
 import (
 	"bufio"
+	"errors"
 	"net"
 	"strings"
 	"time"
-	"errors"
 )
 
 const (
-	TIME_DELAY_AFTER_WRITE = 500
+	TIME_DELAY_AFTER_WRITE = 200
 )
 
 type Client struct {
-	Address   string
-	Conn      net.Conn
-	buf       [4096]byte
-
+	Address string
+	Conn    net.Conn
+	buf     [4096]byte
 }
 
-func (c* Client) Write(conn net.Conn,bufs []byte)(n int,err error){
+func (c *Client) Write(conn net.Conn, bufs []byte) (n int, err error) {
 	n, err = conn.Write(bufs)
 	if err != nil {
-		return n,err
+		return n, err
 	}
 	time.Sleep(time.Millisecond * TIME_DELAY_AFTER_WRITE)
-	return n,err
+	return n, err
 }
 
-func (c * Client) Connect(address string)(err error){
-	c.Conn, err = net.Dial("tcp", "192.168.63.250:23")
+func (c *Client) Connect(address string) (err error) {
+	c.Conn, err = net.DialTimeout("tcp", address, 1 * time.Second)
 	if err != nil {
 		return err
 	}
+	c.Conn.SetDeadline(time.Now().Add(3 * time.Second))
 
 	n, err := c.Conn.Read(c.buf[0:])
 	if err != nil {
@@ -59,7 +59,7 @@ func (c * Client) Connect(address string)(err error){
 	c.buf[7] = 252
 	c.buf[10] = 254
 	c.buf[13] = 252
-	n,err = c.Write(c.Conn,c.buf[0:n])
+	n, err = c.Write(c.Conn, c.buf[0:n])
 	if err != nil {
 		return err
 	}
@@ -71,7 +71,7 @@ func (c * Client) Connect(address string)(err error){
 
 	c.buf[1] = 252
 	c.buf[4] = 252
-	n, err = c.Write(c.Conn,c.buf[0:n])
+	n, err = c.Write(c.Conn, c.buf[0:n])
 	if err != nil {
 		return err
 	}
@@ -80,13 +80,27 @@ func (c * Client) Connect(address string)(err error){
 	if err != nil {
 		return err
 	}
+
+	c.Conn.SetDeadline(time.Now().Add(15 * time.Second))
 
 	return err
 }
 
-func (c * Client) Login(username string,password string,enable string) error{
-	login:
-	n, err := c.Write(c.Conn,[]byte(username+"\n"))
+func (c *Client) Login(username string, password string, enable string) error {
+login:
+	n, err := c.Write(c.Conn, []byte("\n"))
+	if err != nil {
+		return err
+	}
+	n, err = c.Write(c.Conn, []byte("\n"))
+	if err != nil {
+		return err
+	}
+	n, err = c.Write(c.Conn, []byte("\n"))
+	if err != nil {
+		return err
+	}
+	n, err = c.Write(c.Conn, []byte(username+"\n"))
 	if err != nil {
 		return err
 	}
@@ -96,16 +110,35 @@ func (c * Client) Login(username string,password string,enable string) error{
 		return err
 	}
 
-	n, err = c.Write(c.Conn,[]byte(password+"\n"))
+	n, err = c.Write(c.Conn, []byte(password+"\n"))
 	if err != nil {
 		return err
 	}
 
+	testCase := 0
+
 	for {
+		if testCase > 2 {
+			return errors.New("error login")
+		}
+		testCase++
+		n, err = c.Write(c.Conn, []byte("\n"))
+		if err != nil {
+			return err
+		}
+		n, err = c.Write(c.Conn, []byte("\n"))
+		if err != nil {
+			return err
+		}
+		n, err = c.Write(c.Conn, []byte("\n"))
+		if err != nil {
+			return err
+		}
 		n, err = c.Conn.Read(c.buf[0:])
 		if err != nil {
 			return err
 		}
+
 		//fmt.Println(string(buf[0:n]))
 		if strings.HasSuffix(string(c.buf[0:n]), ">") {
 			break
@@ -115,13 +148,13 @@ func (c * Client) Login(username string,password string,enable string) error{
 			break
 		}
 		if strings.HasSuffix(string(c.buf[0:n]), "Password:") {
-			n, err = c.Write(c.Conn,[]byte(password+"\n"))
+			n, err = c.Write(c.Conn, []byte(password+"\n"))
 			if err != nil {
 				return err
 			}
 		}
 	}
-	n, err = c.Write(c.Conn,[]byte("enable\n"))
+	n, err = c.Write(c.Conn, []byte("enable\n"))
 	if err != nil {
 		return err
 	}
@@ -132,7 +165,7 @@ func (c * Client) Login(username string,password string,enable string) error{
 	}
 	//fmt.Println(string(buf[0:n]))
 
-	n, err = c.Write(c.Conn,[]byte(enable+"\n"))
+	n, err = c.Write(c.Conn, []byte(enable+"\n"))
 	if err != nil {
 		return err
 	}
@@ -143,7 +176,7 @@ func (c * Client) Login(username string,password string,enable string) error{
 	}
 	//fmt.Println(string(buf[0:n]))
 
-	n, err = c.Write(c.Conn,[]byte("terminal length 0\n"))
+	n, err = c.Write(c.Conn, []byte("terminal length 0\n"))
 	if err != nil {
 		return err
 	}
@@ -156,10 +189,10 @@ func (c * Client) Login(username string,password string,enable string) error{
 	return err
 }
 
-func (c * Client) Cmd(shell string)(context string,err error){
-	_, err =  c.Write(c.Conn,[]byte(shell+"\n\n"))
+func (c *Client) Cmd(shell string) (context string, err error) {
+	_, err = c.Write(c.Conn, []byte(shell+"\n\n"))
 	if err != nil {
-		return "",err
+		return "", err
 	}
 	//
 	//for {
@@ -176,13 +209,13 @@ func (c * Client) Cmd(shell string)(context string,err error){
 	reader := bufio.NewReader(c.Conn)
 
 	if reader == nil {
-		return "",errors.New("Create reader failed.")
+		return "", errors.New("Create reader failed.")
 	}
 
 	for {
 		n, err := reader.Read(c.buf[0:])
 		if err != nil {
-			return "",err
+			return "", err
 		}
 		context += string(c.buf[0:n])
 		if strings.HasSuffix(string(c.buf[0:n]), "#") {
@@ -190,5 +223,5 @@ func (c * Client) Cmd(shell string)(context string,err error){
 		}
 	}
 
-	return context,err
+	return context, err
 }
