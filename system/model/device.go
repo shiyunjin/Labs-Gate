@@ -10,9 +10,10 @@ type Device struct {
 	Id       bson.ObjectId	`bson:"_id"`
 	Name     string
 	Code     string
+	Ip       string
 	Vlan     []string
 	Invalid  []string
 	Username string
 	Password string
-	Ip       string
+	Super	 string
 }
