@@ -87,6 +87,16 @@ func OpenRom(c *gin.Context) {
 				"statusText" : err,
 			})
 		} else {
+			code := c.Param("code")
+			db := c.MustGet("db").(*mgo.Database)
+			err = db.C(model.CollectionRom).Update(bson.M{
+				"rom.code": code,
+			},bson.M{
+				"$set": bson.M{
+					"rom.$.acl": false,
+				},
+			})
+			fmt.Println(err)
 			c.JSON(e.SUCCESS, gin.H{
 				"status" : e.SUCCESS,
 				"statusText" : e.GetMsg(e.SUCCESS),
@@ -122,6 +132,16 @@ func CloseRom(c *gin.Context) {
 				"statusText" : err,
 			})
 		} else {
+			code := c.Param("code")
+			db := c.MustGet("db").(*mgo.Database)
+			err = db.C(model.CollectionRom).Update(bson.M{
+				"rom.code": code,
+			},bson.M{
+				"$set": bson.M{
+					"rom.$.acl": true,
+				},
+			})
+			fmt.Println(err)
 			c.JSON(e.SUCCESS, gin.H{
 				"status" : e.SUCCESS,
 				"statusText" : e.GetMsg(e.SUCCESS),
