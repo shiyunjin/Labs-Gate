@@ -19,6 +19,29 @@ func ErrorNet(net serviceModel.NetMsg, client *telnet.Client,err error) {
 
 
 func Server(Channel serviceModel.Channel) {
+
+	go Network(Channel)
+	//go Bandwidth(Channel)
+	//go Status(Channel)
+}
+
+//func Bandwidth(Channel serviceModel.Channel) {
+//	s := db.Session.Clone()
+//	defer s.Close()
+//
+//	db := s.DB(db.Mongo.Database)
+//	for msg := range Channel.Bandwidthch {
+//		msg.Callback <- nil
+//	}
+//}
+
+//func Status(Channel serviceModel.Channel) {
+//	for msg := range Channel.StatusCh {
+//
+//	}
+//}
+
+func Network(Channel serviceModel.Channel) {
 	s := db.Session.Clone()
 	defer s.Close()
 
