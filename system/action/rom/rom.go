@@ -66,7 +66,7 @@ func List(c *gin.Context) {
 					Name: rom.Name,
 					Code: rom.Code,
 					Desc: "本实验室机器数量：" + strconv.Itoa(len(rom.Machine)) + "台",
-					Acl:  true, // TODO: add status
+					Acl:  rom.Acl,
 				}
 				tempList = append(tempList, tempRom)
 			}
@@ -131,7 +131,7 @@ func Machine(c *gin.Context) {
 			Ip:		machine.Ip,
 			Mac: 	machine.Mac,
 			Des: 	machine.Des,
-			Status: "OPEN",
+			Status: util.If(machine.Acl, "CLOSE", "OPEN").(string),
 		}
 		data = append(data, tempMachine)
 	}
