@@ -28,7 +28,8 @@ func Connect() {
 
 	uri :=  "mongodb://" + auth + config.Get("mongodb.host").(string) +
 			":" + config.Get("mongodb.port").(string) +
-			"/" + config.Get("mongodb.name").(string)
+			"/" + config.Get("mongodb.name").(string) +
+			"?maxPoolSize=10"
 
 	mongo, err := mgo.ParseURL(uri)
 	s, err := mgo.DialWithInfo(mongo)
