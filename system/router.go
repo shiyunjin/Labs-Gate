@@ -10,6 +10,7 @@ import (
 	"github.com/shiyunjin/Labs-Gate/system/action/admin/lab"
 	AdminRom "github.com/shiyunjin/Labs-Gate/system/action/admin/rom"
 	AdminUser "github.com/shiyunjin/Labs-Gate/system/action/admin/user"
+	"github.com/shiyunjin/Labs-Gate/system/action/api/machine"
 	"github.com/shiyunjin/Labs-Gate/system/action/network"
 	"github.com/shiyunjin/Labs-Gate/system/action/rom"
 	"github.com/shiyunjin/Labs-Gate/system/action/user"
@@ -42,6 +43,11 @@ func Router(Channel serviceModel.Channel) *gin.Engine {
 	{
 		api.POST("/login", user.Login)
 		api.POST("/logout", user.Logout)
+
+		apiMachineGroup := api.Group("/machine")
+		{
+			apiMachineGroup.POST("/add", machine.Add)
+		}
 
 		api.Use(jwt.JWT())
 		{
