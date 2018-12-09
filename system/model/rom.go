@@ -27,6 +27,6 @@ type Rom struct {
 type Machine struct {
 	Ip  string	`bson:"ip"`
 	Mac string	`bson:"mac"`
-	Des string	`bson:"bes"`
+	Des string	`bson:"des"`
 	Acl bool 	`bson:"acl"`
 }
