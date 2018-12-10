@@ -130,7 +130,7 @@ func Machine(c *gin.Context) {
 		tempMachine := MachineData{
 			Ip:		machine.Ip,
 			Mac: 	machine.Mac,
-			Des: 	machine.Des,
+			Des: 	machine.Code + util.If(len(machine.Des) > 0, "(" + machine.Des + ")","").(string),
 			Status: util.If(machine.Acl, "CLOSE", "OPEN").(string),
 		}
 		data = append(data, tempMachine)
