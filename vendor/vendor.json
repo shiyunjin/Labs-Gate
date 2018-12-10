@@ -177,10 +177,10 @@
 			"revisionTime": "2018-10-09T02:10:09Z"
 		},
 		{
-			"checksumSHA1": "JS/7UnsPaxgrDZzmpJbNT5+Zjrk=",
+			"checksumSHA1": "ar4ZtYfqA2smdlwMtjw4XrfGJ4s=",
 			"path": "github.com/shiyunjin/go-telnet-cisco",
-			"revision": "29801c74be3016f61f690b3c9e2fcf070bdf80df",
-			"revisionTime": "2018-12-07T09:16:22Z"
+			"revision": "940ff8e0477e473b8fc64191d2f12d40e7146a55",
+			"revisionTime": "2018-12-10T12:42:54Z"
 		},
 		{
 			"checksumSHA1": "RXdGcEWihBEokWLc+LTy/UnI8OM=",
@@ -283,6 +283,10 @@
 			"path": "gopkg.in/yaml.v2",
 			"revision": "5420a8b6744d3b0345ab293f6fcba19c978f1183",
 			"revisionTime": "2018-03-28T19:50:20Z"
+		},
+		{
+			"path": "shiyunjin/go-telnet-cisco",
+			"revision": ""
 		}
 	],
 	"rootPath": "github.com/shiyunjin/Labs-Gate"

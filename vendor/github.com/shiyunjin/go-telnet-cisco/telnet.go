@@ -32,7 +32,7 @@ func (c *Client) Connect(address string) (err error) {
 	if err != nil {
 		return err
 	}
-	c.Conn.SetDeadline(time.Now().Add(3 * time.Second))
+	c.Conn.SetDeadline(time.Now().Add(2 * time.Second))
 
 	n, err := c.Conn.Read(c.buf[0:])
 	if err != nil {
@@ -81,13 +81,14 @@ func (c *Client) Connect(address string) (err error) {
 		return err
 	}
 
-	c.Conn.SetDeadline(time.Now().Add(15 * time.Second))
+	c.Conn.SetDeadline(time.Now().Add(3 * time.Second))
 
 	return err
 }
 
 func (c *Client) Login(username string, password string, enable string) error {
 login:
+	c.Conn.SetDeadline(time.Now().Add(2 * time.Second))
 	n, err := c.Write(c.Conn, []byte("\n"))
 	if err != nil {
 		return err
@@ -154,6 +155,7 @@ login:
 			}
 		}
 	}
+	c.Conn.SetDeadline(time.Now().Add(3 * time.Second))
 	n, err = c.Write(c.Conn, []byte("enable\n"))
 	if err != nil {
 		return err
@@ -190,6 +192,7 @@ login:
 }
 
 func (c *Client) Cmd(shell string) (context string, err error) {
+	c.Conn.SetDeadline(time.Now().Add(5 * time.Second))
 	_, err = c.Write(c.Conn, []byte(shell+"\n\n"))
 	if err != nil {
 		return "", err
