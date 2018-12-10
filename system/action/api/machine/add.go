@@ -1,6 +1,7 @@
 package machine
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/shiyunjin/Labs-Gate/system/e"
 	"github.com/shiyunjin/Labs-Gate/system/model"
@@ -10,17 +11,20 @@ import (
 
 func Add(c *gin.Context){
 	code := c.PostForm("code")
+	lab := c.PostForm("lab")
 	ip := c.PostForm("ip")
 	mac := c.PostForm("mac")
 	des := c.PostForm("des")
+	fmt.Println(code)
 
 	db := c.MustGet("db").(*mgo.Database)
 
 	err := db.C(model.CollectionRom).Update(bson.M{
-		"rom.code": code,
+		"rom.code": lab,
 	},bson.M{
 		"$push": bson.M{
 			"rom.$.machine": bson.M{
+				"code": code,
 				"ip": ip,
 				"mac": mac,
 				"des": des,
