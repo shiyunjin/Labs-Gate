@@ -21,6 +21,8 @@ type MachineResponse struct {
 		Machine 	model.Machine
 		Device		string
 		Admin 		[]string
+		Vlan   		string
+		Acl 		bool			`bson:"acl"`
 	}
 }
 
@@ -48,7 +50,7 @@ func MachineGet(c *gin.Context) (result MachineResponse,err error) {
 		{"$unwind": "$rom"},
 		{"$unwind": "$rom.machine"},
 		{"$match": bson.M{"rom.machine.ip": ip, "rom.code": code}},
-		{"$project": bson.M{"rom": bson.M{"machine": 1, "admin": 1, "device": 1},"_id": 0}},
+		{"$project": bson.M{"rom": bson.M{"machine": 1, "admin": 1, "device": 1, "vlan": 1, "acl": 1},"_id": 0}},
 	}).One(&result)
 
 	return result, err
@@ -97,6 +99,31 @@ func OpenRom(c *gin.Context) {
 				},
 			})
 			fmt.Println(err)
+			for _, machine := range result.Rom.Machine {
+				err := db.C(model.CollectionRom).Update(bson.M{
+					"rom.code": code,
+				},bson.M{
+					"$pull": bson.M{
+						"rom.$.machine": bson.M{
+							"ip": machine.Ip,
+						},
+					},
+				})
+				err = db.C(model.CollectionRom).Update(bson.M{
+					"rom.code": code,
+				},bson.M{
+					"$push": bson.M{
+						"rom.$.machine": bson.M{
+							"ip": machine.Ip,
+							"mac": machine.Mac,
+							"code": machine.Code,
+							"des": machine.Des,
+							"acl": false,
+						},
+					},
+				})
+				fmt.Println(err)
+			}
 			c.JSON(e.SUCCESS, gin.H{
 				"status" : e.SUCCESS,
 				"statusText" : e.GetMsg(e.SUCCESS),
@@ -142,6 +169,31 @@ func CloseRom(c *gin.Context) {
 				},
 			})
 			fmt.Println(err)
+			for _, machine := range result.Rom.Machine {
+				err := db.C(model.CollectionRom).Update(bson.M{
+					"rom.code": code,
+				},bson.M{
+					"$pull": bson.M{
+						"rom.$.machine": bson.M{
+							"ip": machine.Ip,
+						},
+					},
+				})
+				err = db.C(model.CollectionRom).Update(bson.M{
+					"rom.code": code,
+				},bson.M{
+					"$push": bson.M{
+						"rom.$.machine": bson.M{
+							"ip": machine.Ip,
+							"mac": machine.Mac,
+							"code": machine.Code,
+							"des": machine.Des,
+							"acl": true,
+						},
+					},
+				})
+				fmt.Println(err)
+			}
 			c.JSON(e.SUCCESS, gin.H{
 				"status" : e.SUCCESS,
 				"statusText" : e.GetMsg(e.SUCCESS),
@@ -152,6 +204,9 @@ func CloseRom(c *gin.Context) {
 
 func OpenMachine(c *gin.Context) {
 	result, err := MachineGet(c)
+	if err != nil {
+		c.Error(err)
+	}
 	user := getUser(c)
 
 	if user.Auth != "admin" && !util.In_array(user.Username, result.Rom.Admin) {
@@ -161,23 +216,57 @@ func OpenMachine(c *gin.Context) {
 		})
 	} else {
 		// Log Rom data for test
-		fmt.Println(result.Rom.Machine)
+		fmt.Println(result)
 
-		// TODO: each machine to connect server with telnet for close network
-
+		Channel := c.MustGet("Channel").(serviceModel.Channel)
+		resultch := make(chan error)
+		defer close(resultch)
+		Channel.NetworkCh <- serviceModel.NetMsg{Type: 2, Open: 1, Data: result, Callback: resultch}
+		err := <- resultch
 		if err != nil {
-			c.Error(err)
+			c.JSON(e.SUCCESS, gin.H{
+				"status" : e.ERROR,
+				"statusText" : err,
+			})
+		} else {
+			code := c.Param("code")
+			db := c.MustGet("db").(*mgo.Database)
+			err := db.C(model.CollectionRom).Update(bson.M{
+				"rom.code": code,
+			},bson.M{
+				"$pull": bson.M{
+					"rom.$.machine": bson.M{
+						"ip": result.Rom.Machine.Ip,
+					},
+				},
+			})
+			err = db.C(model.CollectionRom).Update(bson.M{
+				"rom.code": code,
+			},bson.M{
+				"$push": bson.M{
+					"rom.$.machine": bson.M{
+						"ip": result.Rom.Machine.Ip,
+						"mac": result.Rom.Machine.Mac,
+						"code": result.Rom.Machine.Code,
+						"des": result.Rom.Machine.Des,
+						"acl": false,
+					},
+				},
+			})
+			fmt.Println(err)
+			c.JSON(e.SUCCESS, gin.H{
+				"status":     e.SUCCESS,
+				"statusText": e.GetMsg(e.SUCCESS),
+			})
 		}
-
-		c.JSON(e.SUCCESS, gin.H{
-			"status":     e.SUCCESS,
-			"statusText": e.GetMsg(e.SUCCESS),
-		})
 	}
 }
 
 func CloseMachine(c *gin.Context) {
 	result, err := MachineGet(c)
+	if err != nil {
+		c.Error(err)
+	}
 	user := getUser(c)
 
 	if user.Auth != "admin" && !util.In_array(user.Username, result.Rom.Admin) {
@@ -187,17 +276,49 @@ func CloseMachine(c *gin.Context) {
 		})
 	} else {
 		// Log Rom data for test
-		fmt.Println(result.Rom.Machine)
+		fmt.Println(result)
 
-		// TODO: each machine to connect server with telnet for close network
-
+		Channel := c.MustGet("Channel").(serviceModel.Channel)
+		resultch := make(chan error)
+		defer close(resultch)
+		Channel.NetworkCh <- serviceModel.NetMsg{Type: 2, Open: 0, Data: result, Callback: resultch}
+		err := <- resultch
 		if err != nil {
-			c.Error(err)
-		}
+			c.JSON(e.SUCCESS, gin.H{
+				"status" : e.ERROR,
+				"statusText" : err,
+			})
+		} else {
+			code := c.Param("code")
+			db := c.MustGet("db").(*mgo.Database)
+			err := db.C(model.CollectionRom).Update(bson.M{
+				"rom.code": code,
+			}, bson.M{
+				"$pull": bson.M{
+					"rom.$.machine": bson.M{
+						"ip": result.Rom.Machine.Ip,
+					},
+				},
+			})
+			err = db.C(model.CollectionRom).Update(bson.M{
+				"rom.code": code,
+			}, bson.M{
+				"$push": bson.M{
+					"rom.$.machine": bson.M{
+						"ip":   result.Rom.Machine.Ip,
+						"mac":  result.Rom.Machine.Mac,
+						"code": result.Rom.Machine.Code,
+						"des":  result.Rom.Machine.Des,
+						"acl":  true,
+					},
+				},
+			})
+			fmt.Println(err)
 
-		c.JSON(e.SUCCESS, gin.H{
-			"status":     e.SUCCESS,
-			"statusText": e.GetMsg(e.SUCCESS),
-		})
+			c.JSON(e.SUCCESS, gin.H{
+				"status":     e.SUCCESS,
+				"statusText": e.GetMsg(e.SUCCESS),
+			})
+		}
 	}
 }
