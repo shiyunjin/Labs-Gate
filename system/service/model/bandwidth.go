@@ -3,5 +3,10 @@ package serviceModel
 type BandwidthMsg struct {
 	Type int
 	Device string
-	Callback chan interface{}
+	Callback chan BandwidthCall
+}
+
+type BandwidthCall struct {
+	Err error
+	Data interface{}
 }

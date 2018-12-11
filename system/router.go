@@ -112,6 +112,7 @@ func Router(Channel serviceModel.Channel) *gin.Engine {
 					adminDeviceGroup.POST("/del", 		device.Del)
 					adminDeviceGroup.POST("/edit",		device.Edit)
 					adminDeviceGroup.POST("/interface",	device.Interface)
+					adminDeviceGroup.GET("/bandwidth/:code", device.Bandwidth)
 				}
 			}
 		}

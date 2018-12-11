@@ -17,6 +17,9 @@ func main() {
 	Channel.NetworkCh = make(chan serviceModel.NetMsg)
 	defer close(Channel.NetworkCh)
 
+	Channel.Bandwidthch = make(chan serviceModel.BandwidthMsg)
+	defer close(Channel.Bandwidthch)
+
 	// Loding config
 	config.Init()
 
