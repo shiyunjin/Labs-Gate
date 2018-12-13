@@ -42,9 +42,9 @@ func List(c *gin.Context) {
 		}
 		all = append(all, tempUser)
 		if row.Permission == "admin" {
-			user = append(user, tempUser)
-		} else {
 			admin = append(admin, tempUser)
+		} else {
+			user = append(user, tempUser)
 		}
 	}
 	c.JSON(e.SUCCESS, gin.H{
