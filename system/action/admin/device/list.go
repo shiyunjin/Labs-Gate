@@ -16,7 +16,7 @@ func List(c *gin.Context) {
 		c.Error(err)
 	}
 
-	var list []gin.H
+	list := []gin.H{}
 
 	for _, device := range devices {
 		if device.Vlan == nil {

@@ -28,7 +28,9 @@ func List(c *gin.Context) {
 		c.Error(err)
 	}
 
-	var all, user, admin []ListResponse
+	all := []ListResponse{}
+	user := []ListResponse{}
+	admin := []ListResponse{}
 
 	for _, row := range users {
 		tempUser := ListResponse{
